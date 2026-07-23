@@ -1,0 +1,16 @@
+{
+  "795f8666-939e-4b09-ac95-f9fa6b825b3d": {
+    "id": "795f8666-939e-4b09-ac95-f9fa6b825b3d",
+    "user_id": "test-student-id",
+    "problem_id": "P3001",
+    "language": "python",
+    "source_code": "print(int(input()))",
+    "status": "finished",
+    "result": "AC",
+    "score": 100,
+    "total_time": 0.0538,
+    "created_at": "2026-07-23T08:33:02Z",
+    "started_at": "2026-07-23T08:33:02Z",
+    "finished_at": "2026-07-23T08:33:02Z"
+  }
+}

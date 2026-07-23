@@ -1,0 +1,18 @@
+{
+  "638c3795-d72a-452a-a62b-7c58950c74dc_c1": {
+    "submission_id": "638c3795-d72a-452a-a62b-7c58950c74dc",
+    "case_id": "c1",
+    "result": "AC",
+    "score": 100,
+    "time_used": 0.0481,
+    "memory_used": null,
+    "exit_code": 0,
+    "input_data": "1\n",
+    "stdout": "1\r\n",
+    "stderr": "",
+    "expected_output": "1\n",
+    "message": "accepted",
+    "is_hidden": false,
+    "created_at": "2026-07-23T12:41:37Z"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "P3001": {
+    "id": "P3001",
+    "title": "Persistence Test",
+    "description": "desc",
+    "input_description": "input",
+    "output_description": "output",
+    "samples": [
+      {
+        "input": "1\n",
+        "output": "1\n"
+      }
+    ],
+    "constraints": "",
+    "time_limit": 2.0,
+    "memory_limit": 128,
+    "difficulty": "easy",
+    "tags": [],
+    "test_cases": [
+      {
+        "case_id": "c1",
+        "input": "1\n",
+        "output": "1\n",
+        "score": 100,
+        "is_hidden": false
+      }
+    ],
+    "judge_mode": "standard"
+  }
+}

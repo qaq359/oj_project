@@ -1,0 +1,18 @@
+{
+  "a6558b40-f2e3-4933-bd12-c1182419c16e_c1": {
+    "submission_id": "a6558b40-f2e3-4933-bd12-c1182419c16e",
+    "case_id": "c1",
+    "result": "AC",
+    "score": 100,
+    "time_used": 0.0483,
+    "memory_used": null,
+    "exit_code": 0,
+    "input_data": "1\n",
+    "stdout": "1\r\n",
+    "stderr": "",
+    "expected_output": "1\n",
+    "message": "accepted",
+    "is_hidden": false,
+    "created_at": "2026-07-23T12:41:51Z"
+  }
+}

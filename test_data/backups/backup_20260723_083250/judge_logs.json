@@ -1,0 +1,18 @@
+{
+  "ca5d5aea-ccaa-4d5d-99e6-41f6a75d68a8_c1": {
+    "submission_id": "ca5d5aea-ccaa-4d5d-99e6-41f6a75d68a8",
+    "case_id": "c1",
+    "result": "AC",
+    "score": 100,
+    "time_used": 0.0509,
+    "memory_used": null,
+    "exit_code": 0,
+    "input_data": "1\n",
+    "stdout": "1\r\n",
+    "stderr": "",
+    "expected_output": "1\n",
+    "message": "accepted",
+    "is_hidden": false,
+    "created_at": "2026-07-23T08:32:48Z"
+  }
+}

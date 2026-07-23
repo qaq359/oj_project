@@ -1,0 +1,18 @@
+{
+  "3df47a03-32d0-4d75-9330-e4f885e3ff36_c1": {
+    "submission_id": "3df47a03-32d0-4d75-9330-e4f885e3ff36",
+    "case_id": "c1",
+    "result": "AC",
+    "score": 100,
+    "time_used": 0.1101,
+    "memory_used": null,
+    "exit_code": 0,
+    "input_data": "1\n",
+    "stdout": "1\r\n",
+    "stderr": "",
+    "expected_output": "1\n",
+    "message": "accepted",
+    "is_hidden": false,
+    "created_at": "2026-07-23T07:28:01Z"
+  }
+}

@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OJ System
+temp/
+data/*.json
+data/*.db
+data/*.sqlite
+data/backups/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Sensitive
+*.env
+*.key

@@ -1,0 +1,212 @@
+{
+  "ef161145-3c69-4c0b-9984-cb811cad69fb": {
+    "id": "ef161145-3c69-4c0b-9984-cb811cad69fb",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "d6cb2fa8-3bf4-47f9-87b8-f9f4d94b97ad",
+        "submission_b": "c5121381-3c5e-4182-a8fa-ec913e7d89f7",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T06:56:12Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T06:56:12Z"
+  },
+  "5c432156-c40c-4da4-89ce-831a223ff315": {
+    "id": "5c432156-c40c-4da4-89ce-831a223ff315",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "05e587d4-edd3-48c8-96f8-7c0a97c2deb5",
+        "submission_b": "9216e8c1-3313-483c-9fb1-312d1ae13b56",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T07:00:48Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T07:00:48Z"
+  },
+  "75e79533-bbbb-49fb-b293-e7467deb91a1": {
+    "id": "75e79533-bbbb-49fb-b293-e7467deb91a1",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "c2288276-a7c8-41f9-a289-e0028539bb9f",
+        "submission_b": "8e92f3bf-9aa0-4c3a-9733-63b33c6e8386",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T07:00:52Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T07:00:52Z"
+  },
+  "5c17a13a-1a19-424d-9550-f18a7836dc78": {
+    "id": "5c17a13a-1a19-424d-9550-f18a7836dc78",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "1c0347c8-d7a2-4674-ad1a-5d05b90f7265",
+        "submission_b": "4f30acb0-e29c-4ddc-8008-f8cf352f10eb",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T07:01:40Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T07:01:40Z"
+  },
+  "c561040b-5e27-4aa7-8acd-e995579604c8": {
+    "id": "c561040b-5e27-4aa7-8acd-e995579604c8",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "78963bd5-f3a1-4705-a59c-fbd3e4ad3319",
+        "submission_b": "04c09fc1-96f2-4be9-8607-cfe2fafa39c9",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T07:07:30Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T07:07:30Z"
+  },
+  "a01e4384-a6a5-47db-8895-656d213dbaa2": {
+    "id": "a01e4384-a6a5-47db-8895-656d213dbaa2",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "ce5abdec-cb9f-4567-a5c1-1bef665063ed",
+        "submission_b": "929b8ca1-d1eb-4452-a7e8-10d44c6a324c",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T07:16:11Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T07:16:11Z"
+  },
+  "51a3978f-6436-47e8-9144-62fb436b434b": {
+    "id": "51a3978f-6436-47e8-9144-62fb436b434b",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "c44c0f2e-d39d-469f-a0f0-b179eb199387",
+        "submission_b": "ffa3b7f1-f1f0-4cf5-bb8a-3340aaed2290",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T07:18:18Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T07:18:18Z"
+  },
+  "d164783c-2786-4f17-b098-1877b254b90e": {
+    "id": "d164783c-2786-4f17-b098-1877b254b90e",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "5f7cb4c2-66e3-491d-a4d9-153bab95c992",
+        "submission_b": "f3e8df84-4fe9-4a0f-bf10-0e75e87f3066",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T07:23:37Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T07:23:37Z"
+  },
+  "d70ddaa1-4383-4dd8-9cc7-0a27fcd956b7": {
+    "id": "d70ddaa1-4383-4dd8-9cc7-0a27fcd956b7",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "1883e01f-c526-4e6f-bec8-a0d2db70802b",
+        "submission_b": "eac81d06-3239-4f11-9aab-3d2da4582c47",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T07:28:23Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T07:28:23Z"
+  },
+  "28897ef7-d1b6-4051-91d0-08581cbbc8e7": {
+    "id": "28897ef7-d1b6-4051-91d0-08581cbbc8e7",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "4fdee65f-7847-45da-a3d9-1218108fe1e6",
+        "submission_b": "419e9bc5-03ae-405e-bb6a-f4e34913bbde",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T08:33:32Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T08:33:32Z"
+  },
+  "53c46c79-eba3-4523-bde3-a73f8c9a5522": {
+    "id": "53c46c79-eba3-4523-bde3-a73f8c9a5522",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "3e61c130-0411-4aa0-9e7e-392c19922012",
+        "submission_b": "0c1786bb-9416-4a8d-9dde-f3cbf5fccbe6",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T12:32:20Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T12:32:20Z"
+  },
+  "45e4f636-1c0a-46d7-85b8-16f4979837b0": {
+    "id": "45e4f636-1c0a-46d7-85b8-16f4979837b0",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "5a5600cc-ef09-4d82-acd4-f0ba6b22766b",
+        "submission_b": "01e3a9c8-0cdd-43e5-87ec-0efaae2c095b",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T12:38:28Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T12:38:28Z"
+  },
+  "cd217568-2124-43bc-a469-60ec02c0d9be": {
+    "id": "cd217568-2124-43bc-a469-60ec02c0d9be",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "92181a1f-95f2-4692-8d9b-2786ffc8b1f0",
+        "submission_b": "7feaff60-3182-42d1-b801-fcd6b587e057",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T12:42:20Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T12:42:20Z"
+  },
+  "ff00f427-bf1d-449f-886c-665073247613": {
+    "id": "ff00f427-bf1d-449f-886c-665073247613",
+    "problem_id": "P9999",
+    "pairs": [
+      {
+        "submission_a": "edaf7e9a-01ff-4141-82c7-90c4e2437c8d",
+        "submission_b": "80ec5c52-a7ea-422e-bca0-1e52452b3e12",
+        "similarity": 1.0,
+        "method": "ast",
+        "created_at": "2026-07-23T13:22:53Z"
+      }
+    ],
+    "total_pairs": 1,
+    "created_at": "2026-07-23T13:22:53Z"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "f9201509-f37a-4c74-b993-fe63b535c11a_c1": {
+    "submission_id": "f9201509-f37a-4c74-b993-fe63b535c11a",
+    "case_id": "c1",
+    "result": "AC",
+    "score": 100,
+    "time_used": 0.1082,
+    "memory_used": null,
+    "exit_code": 0,
+    "input_data": "1\n",
+    "stdout": "1\r\n",
+    "stderr": "",
+    "expected_output": "1\n",
+    "message": "accepted",
+    "is_hidden": false,
+    "created_at": "2026-07-23T07:27:49Z"
+  }
+}

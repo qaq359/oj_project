@@ -1,0 +1,29 @@
+{
+  "test-student-id": {
+    "id": "test-student-id",
+    "username": "test_student",
+    "password_hash": "$2b$12$uSrWOwVgkfSS0g6tUMAux.2F/zEccpLtO7m6.07QRGRJ1cBjgcGNO",
+    "role": "student",
+    "is_active": true,
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  "test-teacher-id": {
+    "id": "test-teacher-id",
+    "username": "test_teacher",
+    "password_hash": "$2b$12$MZcUOza6MCnyd70uQM83h.XyAcOy/DYIYRXtfvd/QTdTLai//7S52",
+    "role": "teacher",
+    "is_active": true,
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  },
+  "test-admin-id": {
+    "id": "test-admin-id",
+    "username": "test_admin",
+    "password_hash": "$2b$12$RSx.yIuat7GtvPMekry5Auo1XuP/rz6faHVOiasMcznQxx2XZvq3u",
+    "role": "admin",
+    "is_active": true,
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
+  }
+}

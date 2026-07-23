@@ -1,0 +1,16 @@
+{
+  "db2cee83-8346-408f-bca4-66d61472ecd7": {
+    "id": "db2cee83-8346-408f-bca4-66d61472ecd7",
+    "user_id": "test-student-id",
+    "problem_id": "P3001",
+    "language": "python",
+    "source_code": "print(int(input()))",
+    "status": "finished",
+    "result": "AC",
+    "score": 100,
+    "total_time": 0.0585,
+    "created_at": "2026-07-23T12:37:44Z",
+    "started_at": "2026-07-23T12:37:44Z",
+    "finished_at": "2026-07-23T12:37:44Z"
+  }
+}
