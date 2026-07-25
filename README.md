@@ -212,3 +212,7 @@ oj_project/
 ## License
 
 Educational project.
+
+## Links
+
+- GitHub: [https://github.com/qaq359/oj_project](https://github.com/qaq359/oj_project)
