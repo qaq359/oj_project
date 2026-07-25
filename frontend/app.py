@@ -302,22 +302,34 @@ def _problem_form(problem_id=None, existing=None):
 
         # 样例
         st.markdown("**📋 样例**")
+        samples_default = "1 2\n>>>\n3\n---\n-1 2\n>>>\n1"
+        if existing:
+            samples_default = "\n---\n".join(
+                f"{s['input'].rstrip()}\n>>>\n{s['output'].rstrip()}"
+                for s in existing.get("samples", [])
+            )
         samples_text = st.text_area(
-            "每行一个样例，格式: 输入 || 输出",
-            value="\n".join(f"{s['input'].rstrip()} || {s['output'].rstrip()}" for s in (existing.get("samples",[]) if existing else [])) if existing else "1 2 || 3",
-            height=100, placeholder="1 2 || 3\n-1 2 || 1"
+            "每组用 `>>>` 分隔输入/输出，组间用 `---` 分隔",
+            value=samples_default, height=120,
+            placeholder="1 2\n>>>\n3\n---\n10 20\n>>>\n30",
+            help=">>> 上方是输入，下方是输出；--- 分隔不同样例"
         )
 
         # 测试点
         st.markdown("**🧪 测试点**")
+        tc_default = "case_01 | 50 | 0\n1 2\n>>>\n3\n---\ncase_02 | 50 | 1\n-1 2\n>>>\n1"
+        if existing:
+            tc_parts = []
+            for tc in existing.get("test_cases", []):
+                tc_parts.append(
+                    f"{tc['case_id']} | {tc['score']} | {1 if tc.get('is_hidden') else 0}\n"
+                    f"{tc['input'].rstrip()}\n>>>\n{tc['output'].rstrip()}"
+                )
+            tc_default = "\n---\n".join(tc_parts)
         tc_text = st.text_area(
-            "每行一个测试点，格式: 名称 | 输入 | 输出 | 分值 | hidden(0/1)",
-            value="\n".join(
-                f"{tc['case_id']} | {tc['input'].rstrip()} | {tc['output'].rstrip()} | {tc['score']} | {1 if tc.get('is_hidden') else 0}"
-                for tc in (existing.get("test_cases",[]) if existing else [])
-            ) if existing else "case_01 | 1 2 | 3 | 50 | 0\ncase_02 | -1 2 | 1 | 50 | 1",
-            height=150,
-            help="名称: 唯一标识 | 输入/输出: 用 \\n 表示换行 | 分值: 总和必须=100 | hidden: 1=隐藏 0=公开"
+            "每组首行: 名称 | 分值 | hidden(0/1)，然后输入行，`>>>`，输出行，`---` 分隔",
+            value=tc_default, height=180,
+            help="名称: 唯一标识 | 分值: 总和必须=100 | hidden: 1=隐藏 0=公开\n支持多行输入/输出"
         )
 
         submitted = st.form_submit_button("💾 保存" if existing else "➕ 创建题目", type="primary")
@@ -328,27 +340,39 @@ def _problem_form(problem_id=None, existing=None):
 
             # 解析样例
             samples = []
-            for line in samples_text.strip().split("\n"):
-                if " || " in line:
-                    parts = line.split(" || ", 1)
-                    samples.append({"input": parts[0]+"\n", "output": parts[1]+"\n"})
+            for block in samples_text.strip().split("\n---\n"):
+                block = block.strip()
+                if block and "\n>>>\n" in block:
+                    inp, out = block.split("\n>>>\n", 1)
+                    samples.append({"input": inp + "\n", "output": out + "\n"})
             if not samples:
                 st.error("至少需要一个样例")
                 return True, None
 
             # 解析测试点
             test_cases = []
-            for line in tc_text.strip().split("\n"):
-                parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 5:
-                    tc = {
-                        "case_id": parts[0],
-                        "input": parts[1] + "\n",
-                        "output": parts[2] + "\n",
-                        "score": int(parts[3]),
-                        "is_hidden": parts[4] == "1",
-                    }
-                    test_cases.append(tc)
+            for block in tc_text.strip().split("\n---\n"):
+                block = block.strip()
+                if not block:
+                    continue
+                lines = block.split("\n")
+                header = lines[0]
+                parts = [p.strip() for p in header.split("|")]
+                if len(parts) < 3:
+                    continue
+                # 第1行之后，找到 >>> 分隔输入/输出
+                body = "\n".join(lines[1:])
+                if "\n>>>\n" in body:
+                    inp, out = body.split("\n>>>\n", 1)
+                else:
+                    inp, out = "", ""
+                test_cases.append({
+                    "case_id": parts[0],
+                    "input": inp.strip() + "\n",
+                    "output": out.strip() + "\n",
+                    "score": int(parts[1]),
+                    "is_hidden": parts[2] == "1",
+                })
             if not test_cases:
                 st.error("至少需要一个测试点")
                 return True, None
