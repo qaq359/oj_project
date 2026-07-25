@@ -215,4 +215,4 @@ Educational project.
 
 ## Links
 
-- GitHub: [https://github.com/qaq359/oj_project](https://github.com/qaq359/oj_project)
+- GitHub: [https://github.com/qaq359/oj_project/tree/master]
