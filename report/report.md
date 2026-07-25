@@ -280,7 +280,7 @@ pending ──→ running ──→ finished (AC/WA/RE/TLE)
 
 ### 4.6 权限校验
 
-校验顺序（按大作业要求）：
+校验顺序：
 
 1. 是否已登录 → 401
 2. 用户是否存在 → 401
@@ -480,6 +480,26 @@ os.path.join(BACKUP_DIR, ...)
 import app.repositories.manager as mgr
 os.path.join(mgr.BACKUP_DIR, ...)  # 运行时获取最新值
 ```
+
+### 问题 5：Windows 上 `subprocess.run(timeout=...)` 导致死循环返回 RE 而非 TLE
+
+**现象**：学生在前端提交 `while True: pass` 死循环代码，预期返回 TLE（超时），实际返回 RE（Runtime Error），日志显示 `KeyboardInterrupt`。
+
+**原因**：Windows 上 `subprocess.run([python, main.py], timeout=1.0)` 超时后调用 `TerminateProcess` 杀死进程。Python 进程被杀时报告 `KeyboardInterrupt`，退出码非零。但 `subprocess.run` 的 timeout 机制存在竞态条件——进程先报告退出码，然后 timeout 定时器才触发，导致 `TimeoutExpired` 未被抛出，而是按正常退出处理。引擎判断优先级中 `exit_code != 0` 先于正常比较，误判为 RE。
+
+**解决**：在 `_run_subprocess_sync` 中追加检测——如果 stderr 包含 `KeyboardInterrupt`，说明进程是被外部杀死的（而非代码自身 bug），强制标记为 TLE，并在 `run_python_code` 中增加壁钟时间二次校验：
+
+```python
+# runner.py — 检测 KeyboardInterrupt → 强制 TLE
+if "KeyboardInterrupt" in stderr:
+    return {"stdout": stdout, "stderr": stderr, "exit_code": -1, "timed_out": True}
+
+# 壁钟时间二次校验
+if elapsed >= time_limit and not result["timed_out"]:
+    result["timed_out"] = True
+```
+
+**启示**：Windows 进程管理的边界行为与 Linux 有显著差异，跨平台兼容需显式处理平台特定行为。
 
 ## 8. AI 工具使用说明
 
