@@ -33,6 +33,12 @@ async def run_python_code(
                 _run_subprocess_sync, python_exe, code_path, input_data, time_limit
             )
             elapsed = time.perf_counter() - start_time
+
+            # 二次确认：实际耗时超过限制 → 强制 TLE
+            if elapsed >= time_limit and not result["timed_out"]:
+                result["timed_out"] = True
+                result["exit_code"] = -1
+
             return {
                 "stdout": result["stdout"], "stderr": result["stderr"],
                 "exit_code": result["exit_code"], "time_used": round(min(elapsed, time_limit + 5), 4),
@@ -59,6 +65,13 @@ def _run_subprocess_sync(python_exe: str, code_path: str, input_data: str, time_
         )
         stdout = proc.stdout.decode("utf-8", errors="replace") if proc.stdout else ""
         stderr = proc.stderr.decode("utf-8", errors="replace") if proc.stderr else ""
+
+        # Windows: timeout 后进程被 TerminateProcess 杀死，但 subprocess.run 有时
+        # 不会抛出 TimeoutExpired，而是正常返回 KeyboardInterrupt + 非零退出码。
+        # 检测这种情况 → 强制标记为 TLE
+        if "KeyboardInterrupt" in stderr:
+            return {"stdout": stdout, "stderr": stderr, "exit_code": -1, "timed_out": True}
+
         return {"stdout": stdout, "stderr": stderr, "exit_code": proc.returncode, "timed_out": False}
     except subprocess.TimeoutExpired:
         return {"stdout": "", "stderr": "", "exit_code": -1, "timed_out": True}

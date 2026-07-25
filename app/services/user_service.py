@@ -63,9 +63,9 @@ def update_user(operator_id: str, target_id: str, role: str | None, is_active: b
     if target_id not in users:
         raise HTTPException(status_code=404, detail="user not found")
 
-    # 不允许禁用自己
-    if operator_id == target_id and is_active is False:
-        raise HTTPException(status_code=400, detail="cannot disable yourself")
+    # 不允许管理员修改自己的任何属性
+    if operator_id == target_id:
+        raise HTTPException(status_code=400, detail="cannot modify your own account")
 
     user = users[target_id]
     now = _now_iso()

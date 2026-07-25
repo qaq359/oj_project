@@ -37,3 +37,5 @@ def compare(expected: str, actual: str) -> bool:
     norm_expected = normalize(expected)
     norm_actual = normalize(actual)
     return norm_expected == norm_actual
+
+

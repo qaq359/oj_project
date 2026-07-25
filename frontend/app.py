@@ -175,6 +175,8 @@ def show_problem_detail():
         key="code_input",
     )
     if st.button("提交评测", type="primary", disabled=not code.strip()):
+        # 将字面 \n \t 转为真正换行/制表符（方便粘贴含转义字符的代码）
+        code = code.replace("\\n", "\n").replace("\\t", "\t")
         resp = api_request("POST", "/submissions", {
             "problem_id": problem_id,
             "language": "python",
@@ -343,6 +345,94 @@ def show_teacher_problem_management():
                 st.error("❌ JSON 格式错误")
 
 
+def show_all_submissions():
+    """教师查看所有提交"""
+    st.subheader("📊 所有提交")
+    resp = api_request("GET", "/submissions", {"page_size": 50})
+    if resp.get("code") != 200:
+        st.error("加载失败")
+        return
+    items = resp["data"].get("items", [])
+    for s in items:
+        with st.container(border=True):
+            c1, c2, c3, c4 = st.columns(4)
+            with c1: st.markdown(f"**{s['id'][:8]}...**")
+            with c2: st.caption(f"用户: {s['user_id'][:8]}...")
+            with c3: st.caption(f"题: {s['problem_id']}")
+            with c4: st.markdown(("🟢" if s.get("result") == "AC" else "🔴") + f" {s.get('result','?')}")
+
+
+def show_admin_user_management():
+    """管理员：用户列表、切换角色、启用/禁用"""
+    st.subheader("👥 用户管理")
+    resp = api_request("GET", "/users", {"page_size": 50})
+    if resp.get("code") != 200:
+        st.error(f"❌ {resp.get('message', '加载失败')}")
+        return
+
+    current_user_id = st.session_state["user"]["id"]
+
+    for u in resp["data"].get("items", []):
+        is_self = u["id"] == current_user_id
+        with st.container(border=True):
+            c1, c2, c3, c4 = st.columns([2, 1, 1, 1])
+            with c1:
+                icon = "✅" if u["is_active"] else "🚫"
+                self_tag = " 👈 当前用户" if is_self else ""
+                st.markdown(f"{icon} **{u['username']}**{self_tag} `{u['id'][:8]}...`")
+            with c2:
+                role_tag = " (管理员)" if u["role"] == "admin" else ""
+                st.caption(f"角色: {u['role']}{role_tag}")
+
+            if is_self:
+                with c3: st.caption("—")
+                with c4: st.caption("—")
+            else:
+                with c3:
+                    if st.button("🔄 切换角色", key=f"role_{u['id']}"):
+                        new_role = "teacher" if u["role"] == "student" else "student"
+                        r = api_request("PUT", f"/users/{u['id']}", {"role": new_role})
+                        if r.get("code") == 200: st.success(f"✅ {u['username']} → {new_role}"); st.rerun()
+                        else: st.error(r.get("message"))
+                with c4:
+                    if u["is_active"]:
+                        if st.button("🚫 禁用", key=f"dis_{u['id']}"):
+                            r = api_request("PUT", f"/users/{u['id']}", {"is_active": False})
+                            if r.get("code") == 200: st.rerun()
+                            else: st.error(r.get("message"))
+                    else:
+                        if st.button("✅ 启用", key=f"ena_{u['id']}"):
+                            r = api_request("PUT", f"/users/{u['id']}", {"is_active": True})
+                            if r.get("code") == 200: st.rerun()
+                            else: st.error(r.get("message"))
+
+
+def show_admin_backup_management():
+    """管理员：备份创建、查看、恢复"""
+    st.subheader("💾 数据备份与恢复")
+    tab1, tab2 = st.tabs(["创建备份", "备份列表"])
+
+    with tab1:
+        if st.button("📦 创建备份", type="primary"):
+            r = api_request("POST", "/admin/backups")
+            if r.get("code") == 201: st.success(f"✅ 备份: {r['data']['backup_id']}")
+            else: st.error(r.get("message"))
+
+    with tab2:
+        resp = api_request("GET", "/admin/backups")
+        if resp.get("code") != 200: st.error("加载失败"); return
+        for b in resp.get("data", []):
+            with st.container(border=True):
+                c1, c2 = st.columns([3, 1])
+                with c1:
+                    st.markdown(f"**{b['backup_id']}**")
+                    st.caption(f"时间: {b.get('created_at','')}")
+                with c2:
+                    if st.button("🔄 恢复", key=f"r_{b['backup_id']}"):
+                        r = api_request("POST", f"/admin/backups/{b['backup_id']}/restore")
+                        st.success("✅ 已恢复" if r.get("code") == 200 else f"❌ {r.get('message')}")
+
+
 # ──────────────────── 主入口 ────────────────────
 
 def main():
@@ -374,6 +464,14 @@ def main():
             if st.button("📊 所有提交"):
                 st.session_state["page"] = "all_submissions"
 
+        if role == "admin":
+            st.divider()
+            st.markdown("### 👑 管理员工具")
+            if st.button("👥 用户管理"):
+                st.session_state["page"] = "user_manage"
+            if st.button("💾 备份恢复"):
+                st.session_state["page"] = "backup_manage"
+
         st.divider()
         if st.button("🚪 登出"):
             api_request("POST", "/auth/logout")
@@ -397,21 +495,11 @@ def main():
     elif page == "teacher_manage":
         show_teacher_problem_management()
     elif page == "all_submissions":
-        st.subheader("📊 所有提交")
-        resp = api_request("GET", "/submissions", {"page_size": 50})
-        if resp.get("code") == 200:
-            items = resp["data"].get("items", [])
-            for s in items:
-                with st.container(border=True):
-                    c1, c2, c3, c4 = st.columns(4)
-                    with c1:
-                        st.markdown(f"**{s['id'][:8]}...**")
-                    with c2:
-                        st.caption(f"用户: {s['user_id'][:8]}...")
-                    with c3:
-                        st.caption(f"题: {s['problem_id']}")
-                    with c4:
-                        st.markdown(("🟢" if s.get("result") == "AC" else "🔴") + f" {s.get('result','?')}")
+        show_all_submissions()
+    elif page == "user_manage":
+        show_admin_user_management()
+    elif page == "backup_manage":
+        show_admin_backup_management()
 
 
 if __name__ == "__main__":

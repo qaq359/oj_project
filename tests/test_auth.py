@@ -166,8 +166,8 @@ class TestUserManagement:
         assert resp.status_code == 200
         assert resp.json()["data"]["role"] == "teacher"
 
-    def test_admin_cannot_disable_self(self, admin_client):
-        """管理员不能禁用自己 → 400"""
+    def test_admin_cannot_modify_self(self, admin_client):
+        """管理员不能修改自己的账号（角色/启用状态） → 400"""
         users = admin_client.get("/api/users").json()
         admin_uid = None
         for u in users["data"]["items"]:
@@ -176,6 +176,9 @@ class TestUserManagement:
                 break
         resp = admin_client.put(f"/api/users/{admin_uid}", json={"is_active": False})
         assert resp.status_code == 400
+
+        resp2 = admin_client.put(f"/api/users/{admin_uid}", json={"role": "teacher"})
+        assert resp2.status_code == 400
 
     def test_nonexistent_user(self, admin_client):
         """查询不存在的用户 → 404"""

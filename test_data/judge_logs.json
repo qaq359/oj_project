@@ -1,34 +1,18 @@
 {
-  "1750f628-13a8-499b-bcbd-7aa80fe6b8ef_c1": {
-    "submission_id": "1750f628-13a8-499b-bcbd-7aa80fe6b8ef",
+  "c511f1ba-e05e-406e-ba0e-23f39b7681b2_c1": {
+    "submission_id": "c511f1ba-e05e-406e-ba0e-23f39b7681b2",
     "case_id": "c1",
     "result": "AC",
-    "score": 50,
-    "time_used": 0.0498,
+    "score": 100,
+    "time_used": 0.0617,
     "memory_used": null,
     "exit_code": 0,
-    "input_data": "1 2\n",
-    "stdout": "3\r\n",
+    "input_data": "1\n",
+    "stdout": "1\r\n",
     "stderr": "",
-    "expected_output": "3\n",
+    "expected_output": "1\n",
     "message": "accepted",
     "is_hidden": false,
-    "created_at": "2026-07-23T13:23:06Z"
-  },
-  "1750f628-13a8-499b-bcbd-7aa80fe6b8ef_c2": {
-    "submission_id": "1750f628-13a8-499b-bcbd-7aa80fe6b8ef",
-    "case_id": "c2",
-    "result": "AC",
-    "score": 50,
-    "time_used": 0.0481,
-    "memory_used": null,
-    "exit_code": 0,
-    "input_data": "10 20\n",
-    "stdout": "30\r\n",
-    "stderr": "",
-    "expected_output": "30\n",
-    "message": "accepted",
-    "is_hidden": true,
-    "created_at": "2026-07-23T13:23:06Z"
+    "created_at": "2026-07-24T03:06:44Z"
   }
 }
