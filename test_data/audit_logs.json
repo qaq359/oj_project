@@ -1,12 +1,1 @@
-{
-  "027444a1-9d20-4f79-8a0b-b9ac165a9dc4": {
-    "id": "027444a1-9d20-4f79-8a0b-b9ac165a9dc4",
-    "operator_id": "test-admin-id",
-    "action": "CREATE_BACKUP",
-    "target_type": "backup",
-    "target_id": "backup_20260724_030645",
-    "success": true,
-    "detail": null,
-    "created_at": "2026-07-24T03:06:45Z"
-  }
-}
+{}

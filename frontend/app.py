@@ -269,8 +269,105 @@ def show_history():
 
 # ──────────────────── 教师管理页面 ────────────────────
 
+def _problem_form(problem_id=None, existing=None):
+    """题目表单：创建或编辑共用"""
+    with st.form(key=f"problem_form_{problem_id or 'new'}"):
+        pid = st.text_input("题目编号", value=existing["id"] if existing else "",
+                           max_chars=32, disabled=existing is not None,
+                           placeholder="如 P1001",
+                           help="仅字母数字下划线连字符，创建后不可修改")
+        title = st.text_input("标题", value=existing.get("title","") if existing else "",
+                             max_chars=100)
+        desc = st.text_area("题目描述", value=existing.get("description","") if existing else "",
+                           height=150)
+        inp_desc = st.text_area("输入说明", value=existing.get("input_description","") if existing else "",
+                               height=80)
+        out_desc = st.text_area("输出说明", value=existing.get("output_description","") if existing else "",
+                                height=80)
+
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            difficulty = st.selectbox("难度", ["easy","medium","hard"],
+                                     index=["easy","medium","hard"].index(existing.get("difficulty","easy")) if existing else 0)
+        with c2:
+            time_limit = st.number_input("时间限制(秒)", value=float(existing.get("time_limit",1.0)) if existing else 1.0, min_value=0.1)
+        with c3:
+            memory_limit = st.number_input("内存限制(MB)", value=int(existing.get("memory_limit",128)) if existing else 128, min_value=1)
+
+        constraints = st.text_input("约束说明", value=existing.get("constraints","") if existing else "",
+                                    placeholder="如 |a|, |b| <= 10^9")
+        tags = st.text_input("标签（逗号分隔）",
+                            value=",".join(existing.get("tags",[])) if existing else "",
+                            placeholder="基础, 输入输出")
+
+        # 样例
+        st.markdown("**📋 样例**")
+        samples_text = st.text_area(
+            "每行一个样例，格式: 输入 || 输出",
+            value="\n".join(f"{s['input'].rstrip()} || {s['output'].rstrip()}" for s in (existing.get("samples",[]) if existing else [])) if existing else "1 2 || 3",
+            height=100, placeholder="1 2 || 3\n-1 2 || 1"
+        )
+
+        # 测试点
+        st.markdown("**🧪 测试点**")
+        tc_text = st.text_area(
+            "每行一个测试点，格式: 名称 | 输入 | 输出 | 分值 | hidden(0/1)",
+            value="\n".join(
+                f"{tc['case_id']} | {tc['input'].rstrip()} | {tc['output'].rstrip()} | {tc['score']} | {1 if tc.get('is_hidden') else 0}"
+                for tc in (existing.get("test_cases",[]) if existing else [])
+            ) if existing else "case_01 | 1 2 | 3 | 50 | 0\ncase_02 | -1 2 | 1 | 50 | 1",
+            height=150,
+            help="名称: 唯一标识 | 输入/输出: 用 \\n 表示换行 | 分值: 总和必须=100 | hidden: 1=隐藏 0=公开"
+        )
+
+        submitted = st.form_submit_button("💾 保存" if existing else "➕ 创建题目", type="primary")
+        if submitted:
+            if not pid or not title or not desc:
+                st.error("编号、标题、描述为必填")
+                return True, None
+
+            # 解析样例
+            samples = []
+            for line in samples_text.strip().split("\n"):
+                if " || " in line:
+                    parts = line.split(" || ", 1)
+                    samples.append({"input": parts[0]+"\n", "output": parts[1]+"\n"})
+            if not samples:
+                st.error("至少需要一个样例")
+                return True, None
+
+            # 解析测试点
+            test_cases = []
+            for line in tc_text.strip().split("\n"):
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) >= 5:
+                    tc = {
+                        "case_id": parts[0],
+                        "input": parts[1] + "\n",
+                        "output": parts[2] + "\n",
+                        "score": int(parts[3]),
+                        "is_hidden": parts[4] == "1",
+                    }
+                    test_cases.append(tc)
+            if not test_cases:
+                st.error("至少需要一个测试点")
+                return True, None
+
+            data = {
+                "id": pid, "title": title, "description": desc,
+                "input_description": inp_desc, "output_description": out_desc,
+                "samples": samples, "constraints": constraints,
+                "time_limit": time_limit, "memory_limit": memory_limit,
+                "difficulty": difficulty,
+                "tags": [t.strip() for t in tags.split(",") if t.strip()],
+                "test_cases": test_cases,
+            }
+            return False, data
+    return True, None
+
+
 def show_teacher_problem_management():
-    """教师题目管理（方案A）"""
+    """教师题目管理（方案A）— 表单式创建/编辑"""
     st.subheader("🛠️ 题目管理")
 
     tab1, tab2 = st.tabs(["题目列表", "创建题目"])
@@ -279,70 +376,61 @@ def show_teacher_problem_management():
         resp = api_request("GET", "/problems")
         if resp.get("code") == 200:
             items = resp["data"].get("items", [])
+            if not items:
+                st.info("暂无题目，请在「创建题目」标签中添加")
             for p in items:
-                with st.expander(f"{p['id']} — {p['title']}", expanded=False):
+                with st.expander(f"{p['id']} — {p['title']}"):
                     resp_d = api_request("GET", f"/problems/{p['id']}")
                     if resp_d.get("code") == 200:
                         d = resp_d["data"]
-                        st.json({
-                            "id": d["id"], "title": d["title"],
-                            "difficulty": d["difficulty"],
-                            "time_limit": d["time_limit"],
-                            "memory_limit": d["memory_limit"],
-                            "tags": d.get("tags", []),
-                            "test_cases": d.get("test_cases", []),
-                        })
+                        tc_info = d.get("test_cases") or []
+                        st.caption(f"⏱ {d.get('time_limit',1)}s | 💾 {d.get('memory_limit',128)}MB | "
+                                   f"{'🟢' if d.get('difficulty')=='easy' else '🟡' if d.get('difficulty')=='medium' else '🔴'} {d.get('difficulty','')}")
+                        st.caption(f"测试点: {len(tc_info)} 个 | 标签: {', '.join(d.get('tags',[]))}")
+
                     c1, c2 = st.columns(2)
                     with c1:
                         if st.button("🗑️ 删除", key=f"del_{p['id']}"):
                             r = api_request("DELETE", f"/problems/{p['id']}")
                             if r.get("code") == 200:
-                                st.success("已删除")
-                                st.rerun()
+                                st.success("已删除"); st.rerun()
                             else:
                                 st.error(r.get("message"))
                     with c2:
                         if st.button("✏️ 编辑", key=f"edit_{p['id']}"):
-                            st.session_state["edit_problem"] = p["id"]
+                            st.session_state["edit_problem_id"] = p["id"]
                             st.rerun()
 
         # 编辑界面
-        edit_id = st.session_state.get("edit_problem")
+        edit_id = st.session_state.get("edit_problem_id")
         if edit_id:
-            st.subheader(f"编辑题目: {edit_id}")
-            with st.form("edit_form"):
-                new_title = st.text_input("新标题")
-                new_diff = st.selectbox("难度", ["easy", "medium", "hard"])
-                new_time = st.number_input("时间限制(秒)", value=1.0, min_value=0.1)
-                new_mem = st.number_input("内存限制(MB)", value=128, min_value=1)
-                if st.form_submit_button("保存修改"):
-                    r = api_request("PUT", f"/problems/{edit_id}", {
-                        "title": new_title,
-                        "difficulty": new_diff,
-                        "time_limit": new_time,
-                        "memory_limit": new_mem,
-                    })
+            st.divider()
+            st.subheader(f"✏️ 编辑题目: {edit_id}")
+            resp_full = api_request("GET", f"/problems/{edit_id}")
+            if resp_full.get("code") == 200:
+                canceled, data = _problem_form(problem_id=edit_id, existing=resp_full["data"])
+                if not canceled and data:
+                    r = api_request("PUT", f"/problems/{edit_id}", data)
                     if r.get("code") == 200:
-                        st.success("修改成功")
-                        st.session_state["edit_problem"] = None
+                        st.success("✅ 修改成功")
+                        st.session_state["edit_problem_id"] = None
                         st.rerun()
                     else:
-                        st.error(r.get("message"))
+                        st.error(f"❌ {r.get('message')}")
+            if st.button("取消编辑"):
+                st.session_state["edit_problem_id"] = None
+                st.rerun()
 
     with tab2:
-        st.markdown("创建新题目（JSON 格式，包含完整 test_cases）")
-        problem_json = st.text_area("题目 JSON", height=400, key="create_json",
-            placeholder='{"id":"P1001","title":"A+B","description":"...","input_description":"...","output_description":"...","samples":[{"input":"1 2\\n","output":"3\\n"}],"time_limit":1.0,"memory_limit":128,"difficulty":"easy","tags":[],"test_cases":[{"case_id":"c1","input":"1 2\\n","output":"3\\n","score":100,"is_hidden":false}]}')
-        if st.button("创建题目", type="primary"):
-            try:
-                data = json.loads(problem_json)
-                r = api_request("POST", "/problems", data)
-                if r.get("code") == 201:
-                    st.success(f"✅ 题目 {data['id']} 创建成功！")
-                else:
-                    st.error(f"❌ {r.get('message')}")
-            except json.JSONDecodeError:
-                st.error("❌ JSON 格式错误")
+        st.subheader("➕ 创建新题目")
+        canceled, data = _problem_form()
+        if not canceled and data:
+            r = api_request("POST", "/problems", data)
+            if r.get("code") == 201:
+                st.success(f"✅ 题目 {data['id']} 创建成功！")
+                st.rerun()
+            else:
+                st.error(f"❌ {r.get('message')}")
 
 
 def show_all_submissions():
