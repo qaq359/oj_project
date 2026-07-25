@@ -175,7 +175,6 @@ def show_problem_detail():
         key="code_input",
     )
     if st.button("提交评测", type="primary", disabled=not code.strip()):
-        # 将字面 \n \t 转为真正换行/制表符（方便粘贴含转义字符的代码）
         code = code.replace("\\n", "\n").replace("\\t", "\t")
         resp = api_request("POST", "/submissions", {
             "problem_id": problem_id,
@@ -184,22 +183,21 @@ def show_problem_detail():
         })
         if resp.get("code") == 202:
             sid = resp["data"]["submission_id"]
-            st.success(f"✅ 提交成功！提交编号: {sid}")
             st.session_state["last_submission"] = sid
+            st.session_state["page"] = "submission_result"
+            st.rerun()
         else:
             st.error(f"❌ {resp.get('message', '提交失败')}")
 
 
 def show_submission_result():
-    """查看最近一次提交的结果"""
+    """查看最近一次提交的结果（自动轮询直到评测完成）"""
     sid = st.session_state.get("last_submission", "")
     if not sid:
         st.info("还没有提交过代码")
         return
 
-    st.subheader(f"📊 提交结果 — {sid}")
-    if st.button("🔄 刷新状态"):
-        st.rerun()
+    st.subheader(f"📊 提交结果 — `{sid[:8]}...`")
 
     resp = api_request("GET", f"/submissions/{sid}")
     if resp.get("code") != 200:
@@ -207,34 +205,40 @@ def show_submission_result():
         return
 
     sub = resp["data"]
-    status_colors = {
-        "pending": "🟡", "running": "🔵", "finished": "🟢", "failed": "🔴"
-    }
-    result_colors = {
-        "AC": "🟢", "WA": "🔴", "RE": "🟠", "TLE": "⏰", "SE": "💥"
-    }
+    status = sub["status"]
+
+    # 评测中 → 自动轮询
+    if status in ("pending", "running"):
+        with st.spinner(f"评测进行中...（状态: {status}）"):
+            time.sleep(1)
+        st.rerun()
+
+    # 评测完成
+    status_colors = {"pending": "🟡", "running": "🔵", "finished": "🟢", "failed": "🔴"}
+    result_colors = {"AC": "🟢", "WA": "🔴", "RE": "🟠", "TLE": "⏰", "SE": "💥"}
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.metric("状态", f"{status_colors.get(sub['status'], '')} {sub['status']}")
+        st.metric("状态", f"{status_colors.get(status, '')} {status}")
     with c2:
         st.metric("结果", f"{result_colors.get(sub.get('result', ''), '')} {sub.get('result', 'N/A')}")
     with c3:
         st.metric("得分", f"{sub.get('score', 0)} / 100")
 
-    if sub["status"] in ("finished", "failed"):
-        # 显示测试点详情
-        logs_resp = api_request("GET", f"/submissions/{sid}/logs")
-        if logs_resp.get("code") == 200:
-            cases = logs_resp["data"].get("cases", [])
-            if cases:
-                st.subheader("📋 测试点详情")
-                for c in cases:
-                    icon = result_colors.get(c["result"], "")
-                    hidden = "🔒 隐藏" if c.get("is_hidden") else ""
-                    st.text(f"{icon} {c['case_id']}: {c['result']} | 耗时 {c['time_used']}s | {hidden}")
-                    if c.get("message"):
-                        st.caption(f"  {c['message']}")
+    if st.button("🔄 手动刷新"):
+        st.rerun()
+
+    logs_resp = api_request("GET", f"/submissions/{sid}/logs")
+    if logs_resp.get("code") == 200:
+        cases = logs_resp["data"].get("cases", [])
+        if cases:
+            st.subheader("📋 测试点详情")
+            for c in cases:
+                icon = result_colors.get(c["result"], "")
+                hidden = "🔒 隐藏" if c.get("is_hidden") else ""
+                st.text(f"{icon} {c['case_id']}: {c['result']} | 耗时 {c['time_used']}s | {hidden}")
+                if c.get("message"):
+                    st.caption(f"  {c['message']}")
 
 
 def show_history():
